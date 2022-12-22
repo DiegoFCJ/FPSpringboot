@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "users")
 public class User {
@@ -24,30 +22,21 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
     private String password;
-    private UsersRoles roles;
-    private int score;
-    private LocalDateTime registered_on;
-    private LocalDateTime update_on;
-    private LocalDateTime last_log;
-    private boolean isEnabled;
+    private String roles;
+    private boolean isEnabled = false;
 
 
     public User() {}
 
-    public User(
-            String username,
-            UsersRoles roles) {
-        this.name = "ft_" + username;
-        this.surname = "lt_" + username;
-        this.email = username + "@mail.test";
-        this.username = username;
-        this.password = enc.encode(username);
-        this.roles = roles;
-        this.registered_on = LocalDateTime.now();
-        this.update_on = LocalDateTime.now();
-        this.last_log = LocalDateTime.now();
-        this.score = (int)(Math.random()*100);
+    public User(String role) {
+        String roleLowerCase = role.toLowerCase();
+        this.roles = role;
         this.isEnabled = true;
+        this.name = roleLowerCase;
+        this.surname = roleLowerCase;
+        this.username = roleLowerCase;
+        this.email = roleLowerCase + "@TheBoss.com";
+        this.password = enc.encode(roleLowerCase);
     }
 
     public Long getId() {
@@ -98,44 +87,12 @@ public class User {
         this.password = password;
     }
 
-    public UsersRoles getRoles() {
+    public String getRoles() {
         return roles;
     }
 
-    public void setRoles(UsersRoles roles) {
+    public void setRoles(String roles) {
         this.roles = roles;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public LocalDateTime getRegistered_on() {
-        return registered_on;
-    }
-
-    public void setRegistered_on(LocalDateTime registered_on) {
-        this.registered_on = registered_on;
-    }
-
-    public LocalDateTime getUpdate_on() {
-        return update_on;
-    }
-
-    public void setUpdate_on(LocalDateTime update_on) {
-        this.update_on = update_on;
-    }
-
-    public LocalDateTime getLast_log() {
-        return last_log;
-    }
-
-    public void setLast_log(LocalDateTime last_log) {
-        this.last_log = last_log;
     }
 
     public boolean isEnabled() {
@@ -154,10 +111,6 @@ public class User {
                 "\nusername = " + this.username +
                 "\nemail = " + this.email +
                 "\npassword = " + this.password +
-                "\nroles = " + this.roles +
-                "\nregistered on = " + this.registered_on +
-                "\nLast Attributes Update on = " + this.update_on +
-                "\nLast Time He Logged in = " + this.last_log +
-                "\nscore = " + this.score;
+                "\nroles = " + this.roles;
     }
 }

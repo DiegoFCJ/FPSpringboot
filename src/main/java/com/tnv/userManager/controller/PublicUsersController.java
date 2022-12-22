@@ -1,4 +1,4 @@
-package com.tnv.userManager.controller.UsersControllersByRole;
+package com.tnv.userManager.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.security.spec.InvalidParameterSpecException;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/public")
@@ -28,11 +27,6 @@ public class PublicUsersController {
     public PublicUsersController(JpaUserDetailsService userService, EmailActivationLinkService activation) {
         this.userService = userService;
         this.activation = activation;
-    }
-
-    @GetMapping("/hi")
-    public String home() {
-        return "Hello, World!";
     }
 
     @PostMapping("/signIn")
@@ -58,10 +52,9 @@ public class PublicUsersController {
         if(!isUsernamePresent && !isEmailPresent){
             ObjectMapper mapper = new ObjectMapper();
             String signedUser = userService.signUp(user);
-            activation.sendMail(user);
-            Map<String,Object> map = mapper.readValue(signedUser, Map.class);
-
-            return new ResponseEntity<User>((User) map, HttpStatus.ACCEPTED);
+            activation.sendMail(user);/*
+            Map<String,Object> map = mapper.readValue(signedUser, Map.class);*/
+            return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(user, HttpStatus.CONFLICT);
     }
@@ -69,11 +62,11 @@ public class PublicUsersController {
     @GetMapping("/activation")
     public String activation(@RequestParam String token){
             return activation.confirmEmail(token);
-        }
+    }
 
-    @GetMapping("/idByUsername/{username}")
-    public int getIdByUsername(@PathVariable("username") String username){
-        return userService.getIdByUsername(username);
+    @PostMapping("/signAdmin")
+    public void signAdmin(){
+        userService.signAdmin();
     }
 
     @GetMapping("/{id}")
@@ -86,41 +79,6 @@ public class PublicUsersController {
         return userService.allUsers();
     }
 
-    @GetMapping("/email/{email}")
-    public List<User> findByEmailContains(@PathVariable("email") String email) {
-        return userService.findByEmailContains(email);
-    }
-
-    @GetMapping("/username/{username}")
-    public List<User> findByUsernameContains(@PathVariable("username") String username) {
-        return userService.findByUsernameContains(username);
-    }
-
-    @GetMapping("/score/{id}")
-    public int userScore(@PathVariable("id") Long id) {
-        return userService.userScore(id);
-    }
-
-    @GetMapping("/allScore")
-    public ArrayList<Integer> allScores() {
-        return userService.allScores();
-    }
-
-    @GetMapping("/allUsersDescending")
-    public Collection<User> allUsersDescendByScore() {
-        return userService.allUsersDescendByScore();
-    }
-
-    @GetMapping("/allUsersIncrease")
-    public Collection<User> allUsersIncreaseByScore() {
-        return userService.allUsersIncreaseByScore();
-    }
-
-    @GetMapping("/usernamesAndScoresList")
-    public ArrayList<String> allScoresAndUsernames() {
-        return userService.allScoresAndUsernames();
-    }
-
     @PutMapping("/update/{id}")
     public String updateUser(@PathVariable("id") Long id, @RequestBody User user) {
         return userService.updateUser(id, user);
@@ -131,43 +89,4 @@ public class PublicUsersController {
         return userService.deleteUser(id);
     }
 
-    @PatchMapping("/IncrementScore/{id}")
-    public String incrementUserScore(@PathVariable("id") Long userId) {
-        return userService.incrementUserScore(userId);
-    }
-
-    @PatchMapping("/name/{id}")
-    public String updateUserName(@PathVariable("id") Long userId, @RequestBody User userDetails) {
-
-        return userService.updateUserChoice(userId, userDetails, "name");
-    }
-
-    @PatchMapping("/surname/{id}")
-    public String updateUserSurname(@PathVariable("id") Long userId, @RequestBody User userDetails) {
-
-        return userService.updateUserChoice(userId, userDetails, "surname");
-    }
-
-    @PatchMapping("/username/{id}")
-    public String updateUserUsername(@PathVariable("id") Long userId, @RequestBody User userDetails) {
-        return userService.updateUserChoice(userId, userDetails, "username");
-    }
-
-    @PatchMapping("/password/{id}")
-    public String updateUserPassword(@PathVariable("id") Long userId, @RequestBody User userDetails) {
-
-        return userService.updateUserChoice(userId, userDetails, "password");
-    }
-
-    @PatchMapping("/email/{id}")
-    public String updateUserEmail(@PathVariable("id") Long userId, @RequestBody User userDetails) {
-
-        return userService.updateUserChoice(userId, userDetails, "email");
-    }
-
-    @PatchMapping("/score/{id}")
-    public String updateUserScore(@PathVariable("id") Long userId, @RequestBody User userDetails) {
-
-        return userService.updateUserChoice(userId, userDetails, "score");
-    }
     }

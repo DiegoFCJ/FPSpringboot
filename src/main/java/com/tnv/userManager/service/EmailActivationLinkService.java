@@ -105,7 +105,6 @@ public class EmailActivationLinkService {
     public String enbaleUser(Long userIdToUpdate){
         User user = userServ.getUser(userIdToUpdate);
         user.setEnabled(true);
-        user.setUpdate_on(LocalDateTime.now());
         userServ.save(user);
         return user.toString();
     }
