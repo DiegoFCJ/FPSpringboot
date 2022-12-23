@@ -3,7 +3,7 @@ package com.tnv.userManager.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tnv.userManager.model.User;
-import com.tnv.userManager.UserDetailsService.JpaUserDetailsService;
+import com.tnv.userManager.service.JpaUserDetailsService;
 import com.tnv.userManager.service.EmailActivationLinkService;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;

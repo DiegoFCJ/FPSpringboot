@@ -4,14 +4,17 @@ import com.tnv.userManager.model.User;
 import com.tnv.userManager.model.VerificationToken;
 import com.tnv.userManager.repository.UserRepository;
 import com.tnv.userManager.repository.VerificationTokenRepo;
-import com.tnv.userManager.UserDetailsService.JpaUserDetailsService;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.templateparser.markup.HTMLTemplateParser;
 
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLDocument;
 import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.UUID;
@@ -68,8 +71,8 @@ public class EmailActivationLinkService {
         Transport.send(msg);
     }
 
-    private MimeMessage prepareMessage(Session ses, String myAccountEmail, User user, VerificationToken vToken){
-        try{
+    private MimeMessage prepareMessage(Session ses, String myAccountEmail, User user, VerificationToken vToken) {
+        try {
             MimeMessage msg = new MimeMessage(ses);
             msg.setFrom(new InternetAddress(myAccountEmail));
             msg.setRecipients(MimeMessage.RecipientType.TO, String.valueOf(new InternetAddress(user.getEmail())));
@@ -79,7 +82,7 @@ public class EmailActivationLinkService {
                     "\n" +
                     "http://localhost:8080/api/public/activation?token=" + vToken.getToken());
             return msg;
-        }catch (MessagingException ex){
+        } catch (MessagingException ex) {
             Logger.getLogger(JavaMailSender.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
@@ -98,8 +101,52 @@ public class EmailActivationLinkService {
 
         Long userIdToUpdate = vTokenFromDb.getUser().getId();
         enbaleUser(userIdToUpdate);
-        return "Your Account has been activated!  " +
-                "<button onclick=window.location.href=\"http://localhost:4200/login\"; >Click for login</button>";
+        return "<style>\n" +
+                "    .cont{\n" +
+                "      position: relative; \n" +
+                "      width: 100%; \n" +
+                "      height: 100vh;\n" +
+                "    }\n" +
+                "\n" +
+                "    .tit{\n" +
+                "      font-size: 80px;\n" +
+                "      position: absolute;\n" +
+                "      top: 20%;\n" +
+                "      left: 50%;\n" +
+                "      transform: translate(-50%, -50%);\n" +
+                "    }\n" +
+                "\n" +
+                "    .tex{\n" +
+                "      font-size: 40px;\n" +
+                "      position: absolute;\n" +
+                "      top: 40%;\n" +
+                "      left: 50%;\n" +
+                "      transform: translate(-50%, -50%);\n" +
+                "    }\n" +
+                "\n" +
+                "    .but{\n" +
+                "      border-radius: 20%;\n" +
+                "      font-size: 40px;\n" +
+                "      position: absolute; \n" +
+                "      top: 60%; \n" +
+                "      left: 50%;\n" +
+                "      transform: translate(-50%, -50%);  \n" +
+                "      color: white; \n" +
+                "      background-color: red;\n" +
+                "    }\n" +
+                "\n" +
+                "    .but:hover{\n" +
+                "      color: black;\n" +
+                "    }\n" +
+                "\n" +
+                "  </style>\n" +
+                "\n" +
+                "\n" +
+                "  <div class=\"cont\">\n" +
+                "    <p class=\"tit\">Congrats!!</p>\n" +
+                "    <p class=\"tex\">Your Account has been activated!</p>\n" +
+                "    <button class=\"but\" onclick=window.location.href=\"http://localhost:4200/login\";>Click for login</button>\n" +
+                "  </div>";
     }
 
     public String enbaleUser(Long userIdToUpdate){

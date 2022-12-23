@@ -2,12 +2,18 @@ package com.tnv.userManager.model;
 
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Arrays;
+import java.util.Collection;
+
 @Entity
 @Table(name = "users")
-public class User {
+public class User  implements UserDetails{
 
     @Transient
     PasswordEncoder enc = new BCryptPasswordEncoder();
@@ -37,6 +43,43 @@ public class User {
         this.username = roleLowerCase;
         this.email = roleLowerCase + "@TheBoss.com";
         this.password = enc.encode(roleLowerCase);
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.stream(this.roles.split(","))
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.isEnabled;
     }
 
     public Long getId() {
@@ -71,16 +114,8 @@ public class User {
         this.email = email;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
@@ -93,10 +128,6 @@ public class User {
 
     public void setRoles(String roles) {
         this.roles = roles;
-    }
-
-    public boolean isEnabled() {
-        return isEnabled;
     }
 
     public void setEnabled(boolean enabled) {

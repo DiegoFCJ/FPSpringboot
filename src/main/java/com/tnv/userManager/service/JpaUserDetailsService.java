@@ -1,7 +1,6 @@
-package com.tnv.userManager.UserDetailsService;
+package com.tnv.userManager.service;
 
 import com.tnv.userManager.exceptions.UsernameOrEmailAlreadyExistException;
-import com.tnv.userManager.model.SecurityUser;
 import com.tnv.userManager.model.User;
 import com.tnv.userManager.repository.UserRepository;
 import jakarta.mail.MessagingException;
@@ -30,10 +29,9 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepo
-                .findByUsername(username)
-                .map(SecurityUser::new)
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found: " + username));
+        return userRepo.findByUsername(username).orElseThrow(() ->
+                new UsernameNotFoundException(String.format("user with username %s not found", username))
+        );
     }
 
     public int getIdByUsername(String username){
