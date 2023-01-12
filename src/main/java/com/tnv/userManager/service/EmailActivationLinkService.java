@@ -101,52 +101,50 @@ public class EmailActivationLinkService {
 
         Long userIdToUpdate = vTokenFromDb.getUser().getId();
         enbaleUser(userIdToUpdate);
-        return "<style>\n" +
-                "    .cont{\n" +
-                "      position: relative; \n" +
-                "      width: 100%; \n" +
-                "      height: 100vh;\n" +
-                "    }\n" +
-                "\n" +
-                "    .tit{\n" +
-                "      font-size: 80px;\n" +
-                "      position: absolute;\n" +
-                "      top: 20%;\n" +
-                "      left: 50%;\n" +
-                "      transform: translate(-50%, -50%);\n" +
-                "    }\n" +
-                "\n" +
-                "    .tex{\n" +
-                "      font-size: 40px;\n" +
-                "      position: absolute;\n" +
-                "      top: 40%;\n" +
-                "      left: 50%;\n" +
-                "      transform: translate(-50%, -50%);\n" +
-                "    }\n" +
-                "\n" +
-                "    .but{\n" +
-                "      border-radius: 20%;\n" +
-                "      font-size: 40px;\n" +
-                "      position: absolute; \n" +
-                "      top: 60%; \n" +
-                "      left: 50%;\n" +
-                "      transform: translate(-50%, -50%);  \n" +
-                "      color: white; \n" +
-                "      background-color: red;\n" +
-                "    }\n" +
-                "\n" +
-                "    .but:hover{\n" +
-                "      color: black;\n" +
-                "    }\n" +
-                "\n" +
-                "  </style>\n" +
-                "\n" +
-                "\n" +
-                "  <div class=\"cont\">\n" +
-                "    <p class=\"tit\">Congrats!!</p>\n" +
-                "    <p class=\"tex\">Your Account has been activated!</p>\n" +
-                "    <button class=\"but\" onclick=window.location.href=\"http://localhost:4200/login\";>Click for login</button>\n" +
-                "  </div>";
+        return "<style>
+                .cont{
+                    position: relative;
+                    width: 100%;
+                    height: 100vh;
+                }
+
+                .tit{
+                    font-size: 80px;
+                    position: absolute;
+                    top: 20%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+
+                .tex{
+                    font-size: 40px;
+                    position: absolute;
+                    top: 40%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                }
+
+                .but{
+                    border-radius: 50px;
+                    font-size: 40px;
+                    position: absolute;
+                    top: 60%; 
+                    left: 50%;
+                    transform: translate(-50%, -50%);  
+                    color: white;
+                    background-color: red;
+                }
+
+                .but:hover{
+                    color: black;
+                }
+                </style>
+                <div class=\"cont\">
+                    <p class=\"tit\">Congratulazioni!!</p>
+                    <p class=\"tex\">Il tuo account é stato attivato!</p>
+                    <button class=\"but\" onclick=window.location.href=\"http://localhost:4200/login\";>Click for login</button>
+                </div>
+                ";
     }
 
     public String enbaleUser(Long userIdToUpdate){
